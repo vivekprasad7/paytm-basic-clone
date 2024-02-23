@@ -1,7 +1,9 @@
 // backend/db.js
 const mongoose = require('mongoose');
 
-mongoose.connect("mongodb://localhost:27017/paytm")
+mongoose.connect("mongodb+srv://admin:8ydEqT2TPsPghzdt@100x.gbqbkap.mongodb.net/paytm_basic_clone")
+.then(() => console.log("Server is running on PORT : 4000"))
+.catch((e) => console.log("Error connecting to DB", e))
 
 // Create a Schema for Users
 const userSchema = new mongoose.Schema({
