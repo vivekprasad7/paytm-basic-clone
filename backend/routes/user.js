@@ -16,45 +16,206 @@ const signupBody = zod.object({
 })
 
 router.post("/signup", async (req, res) => {
-    const { success } = signupBody.safeParse(req.body)
-    if (!success) {
-        return res.status(411).json({
-            message: "Email already taken / Incorrect inputs"
+    try {
+        console.log("signup", req.body)
+        
+        const { success } = signupBody.safeParse(req.body)
+        if (!success) {
+            return res.status(411).json({
+                message: "Email already taken / Incorrect inputs"
+            })
+        }
+    
+        const existingUser = await User.findOne({
+            username: req.body.username
         })
-    }
-
-    const existingUser = await User.findOne({
-        username: req.body.username
-    })
-
-    if (existingUser) {
-        return res.status(411).json({
-            message: "Email already taken/Incorrect inputs"
+    
+        if (existingUser) {
+            return res.status(411).json({
+                message: "Email already taken/Incorrect inputs"
+            })
+        }
+    
+        const user = await User.create({
+            username: req.body.username,
+            password: req.body.password,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
         })
+        const userId = user._id;
+    
+        await Account.create({
+            userId,
+            balance: 1 + Math.random() * 10000
+        })
+    
+        const token = jwt.sign({
+            userId
+        }, JWT_SECRET);
+    
+        console.log("1", token)
+    
+        res.json({
+            message: "User created successfully",
+            token: token
+        })
+    
+        console.log("2")
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({
+            message: "Internal server error"
+        });
     }
-
-    const user = await User.create({
-        username: req.body.username,
-        password: req.body.password,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-    })
-    const userId = user._id;
-
-    await Account.create({
-        userId,
-        balance: 1 + Math.random() * 10000
-    })
-
-    const token = jwt.sign({
-        userId
-    }, JWT_SECRET);
-
-    res.json({
-        message: "User created successfully",
-        token: token
-    })
 })
+
+
+
+// router.post("/signup", async (req, res) => {
+
+//     console.log("signup", req.body)
+    
+//     const { success } = signupBody.safeParse(req.body)
+//     if (!success) {
+//         return res.status(411).json({
+//             message: "Email already taken / Incorrect inputs"
+//         })
+//     }
+
+//     const existingUser = await User.findOne({
+//         username: req.body.username
+//     })
+
+//     if (existingUser) {
+//         return res.status(411).json({
+//             message: "Email already taken/Incorrect inputs"
+//         })
+//     }
+
+//     const user = await User.create({
+//         username: req.body.username,
+//         password: req.body.password,
+//         firstName: req.body.firstName,
+//         lastName: req.body.lastName,
+//     })
+//     const userId = user._id;
+
+//     await Account.create({
+//         userId,
+//         balance: 1 + Math.random() * 10000
+//     })
+
+//     const token = jwt.sign({
+//         userId
+//     }, JWT_SECRET);
+
+//     console.log("1",token)
+
+//     res.json({
+//         message: "User created successfully",
+//         token: token
+//     })
+
+//     console.log("2")
+
+// })
+
+// router.post("/signup", async (req, res) => {
+//     try {
+//         console.log("signup", req.body);
+//         const { success } = signupBody.safeParse(req.body);
+        
+//         if (!success) {
+//             return res.status(400).json({
+//                 message: "Incorrect inputs"
+//             });
+//         }
+
+//         const existingUser = await User.findOne({ username: req.body.username });
+//         if (existingUser) {
+//             return res.status(409).json({
+//                 message: "Email already taken"
+//             });
+//         }
+
+//         const user = await User.create({
+//             username: req.body.username,
+//             password: req.body.password,
+//             firstName: req.body.firstName,
+//             lastName: req.body.lastName,
+//         });
+
+//         const userId = user._id;
+//         await Account.create({
+//             userId,
+//             balance: 1 + Math.random() * 10000
+//         });
+
+//         const token = jwt.sign({ userId }, JWT_SECRET);
+
+//         console.log("token", token);
+
+//         res.status(200).json({
+//             message: "User created successfully",
+//             token: token
+//         });
+//     } catch (error) {
+//         console.error("Error in signup:", error.message);
+//         res.status(500).json({
+//             message: "Failed to signup",
+//             error: error.message
+//         });
+//     }
+// });
+
+
+// router.post("/signup", async (req, res) => {
+//    try {
+//     console.log("signup", req.body)
+//     const { success } = signupBody.safeParse(req.body)
+//     if (!success) {
+//         return res.status(411).json({
+//             message: "Email already taken / Incorrect inputs"
+//         })
+//     }
+
+//     const existingUser = await User.findOne({
+//         username: req.body.username
+//     })
+
+//     if (existingUser) {
+//         return res.status(411).json({
+//             message: "Email already taken/Incorrect inputs"
+//         })
+//     }
+
+//     const user = await User.create({
+//         username: req.body.username,
+//         password: req.body.password,
+//         firstName: req.body.firstName,
+//         lastName: req.body.lastName,
+//     })
+//     const userId = user._id;
+
+//     await Account.create({
+//         userId,
+//         balance: 1 + Math.random() * 10000
+//     })
+
+//     const token = jwt.sign({
+//         userId
+//     }, JWT_SECRET);
+
+//     console.log("token", token)
+
+//     res.json({
+//         message: "User created successfully",
+//         token: token
+//     })
+//    } catch (error) {
+//         res.status(500).json({msg:"Failed to Signup", error})
+//    }
+// })
 
 
 const signinBody = zod.object({
@@ -116,7 +277,7 @@ router.put("/", authMiddleware, async (req, res) => {
 })
 
 router.get("/bulk", async (req, res) => {
-    const filter = req.query.filter || "";
+    const filter = req.query.filter.toLowerCase() || "";
 
     const users = await User.find({
         $or: [{

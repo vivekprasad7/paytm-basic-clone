@@ -8,7 +8,8 @@ function App() {
   return (
     <div className="h-screen">
         <Routes>
-          <Route path="/signup" element={<Signup/>} />
+
+          <Route path="/" element={<Signup/>} />
           <Route path="/signin" element={<Signin/>} />
           <Route path="/send" element={<Send/>} />
           <Route path="/dashboard" element={<Dashboard/>} />

@@ -1,16 +1,21 @@
 import React from 'react'
 import { useState } from 'react'
 import Heading from '../../components/Heading'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 
 const Send = () => {
+
+  const [searchParams] = useSearchParams()
+  console.log(searchParams)
+  const id  = searchParams.get("id")
+  const firstName  = searchParams.get("name")
 
 
 const [ amount, setAmount] = useState(0)
 
     const changeHandler = (e) => {
         const {name, value} = e.target
-        setSigninInput((prev) => ({...prev, [name] :value }))
+        setAmount(value)
     }
 
     // const submitHandler = () => {
@@ -32,11 +37,13 @@ const [ amount, setAmount] = useState(0)
         <form className='w-[500px] flex flex-col gap-2 p-4 my-4 bg-white shadow-lg rounded-lg'>
         <Heading heading="Send Money"/>
 
-        <div className='flex justify-around items-center gap-2'>
-                    <img className='w-10' src="https://www.seekpng.com/png/full/428-4287240_no-avatar-user-circle-icon-png.png" alt="user-icon" />
-                    <h2>User Name</h2>
+        <div className='flex justify-evenly items-center gap-2'>
+                        <div className='w-12 h-12 rounded-full bg-sky-500 flex items-center justify-center'>
+                      <span className='text-2xl'>{firstName[0].toUpperCase()}</span>
+                    </div>
+                    <h2>{firstName}</h2>
                 </div>
-             <label  className='font-medium'>Amount (in Rs.) </label>
+             <label  className='font-medium py-3'>Amount (in Rs.) </label>
             <input 
             className='py-1 px-2 rounded-lg border border-slate-300'
             type="text" 
@@ -45,11 +52,20 @@ const [ amount, setAmount] = useState(0)
             onChange={changeHandler}
             />
            
-            <button className='bg-sky-500 p-2 rounded-lg font-medium text-white' onClick={() => submitHandler()}>Transfer Money</button>
+            <button className='bg-sky-500 p-2 rounded-lg font-medium text-white' onClick={async() => {
+              await axios.post("http://localhost:3000/api/v1/account/transfer", {
+                to:id,
+                amount
+              },{
+                headers: {
+                  Authorization: "Bearer " + localStorage.getItem("token")
+                }
+              })
+            }}>Transfer Money</button>
 
         </form>
     </div>
   )
 }
 
-export default Signin
+export default Send

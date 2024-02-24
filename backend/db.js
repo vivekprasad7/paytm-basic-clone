@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 
 mongoose.connect("mongodb+srv://admin:8ydEqT2TPsPghzdt@100x.gbqbkap.mongodb.net/paytm_basic_clone")
-.then(() => console.log("Server is running on PORT : 4000"))
+.then(() => console.log("Connected to DB"))
 .catch((e) => console.log("Error connecting to DB", e))
 
 // Create a Schema for Users
@@ -13,13 +13,11 @@ const userSchema = new mongoose.Schema({
         unique: true,
         trim: true,
         lowercase: true,
-        minLength: 3,
         maxLength: 30
     },
     password: {
         type: String,
         required: true,
-        minLength: 6
     },
     firstName: {
         type: String,
