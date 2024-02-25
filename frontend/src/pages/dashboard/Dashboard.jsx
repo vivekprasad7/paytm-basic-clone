@@ -8,7 +8,7 @@ const Dashboard = () => {
     const [filter, setFilter] = useState("")
 
     const fetchUsers = async () => {
-        const res = await axios.get("http://localhost:3000/api/v1/user/bulk?filter=" + filter)
+        const res = await axios.get("https://paytm-basic-clone.onrender.com/api/v1/user/bulk?filter=" + filter)
         console.log("data", res.data.user)
         setUsers(res.data.user)
     }

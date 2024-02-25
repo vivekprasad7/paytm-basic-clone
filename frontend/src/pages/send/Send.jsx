@@ -53,7 +53,7 @@ const [ amount, setAmount] = useState(0)
             />
            
             <button className='bg-sky-500 p-2 rounded-lg font-medium text-white' onClick={async() => {
-              await axios.post("http://localhost:3000/api/v1/account/transfer", {
+              await axios.post("https://paytm-basic-clone.onrender.com/api/v1/account/transfer", {
                 to:id,
                 amount
               },{
