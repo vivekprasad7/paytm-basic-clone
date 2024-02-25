@@ -51,7 +51,7 @@ const Signup = () => {
                 signupInput.password
             ) {
                 console.log("axios called", signupInput);
-                const res = await axios.post("http://localhost:4000/api/v1/user/signup", signupInput);
+                const res = await axios.post("https://paytm-basic-clone.onrender.com/api/v1/user/signup", signupInput);
                 console.log(res.data);
                 // If signup is successful, you might want to redirect to another page or show a success message.
             }
@@ -65,7 +65,7 @@ const Signup = () => {
     async function handleSignup() {
         console.log("signup called", firstName, lastName, username, password);
         try {
-            const response = await fetch("http://localhost:3000/api/v1/user/signup", {
+            const response = await fetch("https://paytm-basic-clone.onrender.com/api/v1/user/signup", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -137,7 +137,7 @@ const Signup = () => {
                 <button className='bg-sky-500 p-2 rounded-lg font-medium text-white' onClick={async () => {
                     try {
                         console.log("signup called", firstName, lastName, username, password);
-                        const res = await axios.post("http://localhost:3000/api/v1/user/signup", {
+                        const res = await axios.post("https://paytm-basic-clone.onrender.com/api/v1/user/signup", {
                             username,
                             firstName,
                             lastName,
