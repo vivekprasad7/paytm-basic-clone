@@ -1,7 +1,9 @@
 // backend/db.js
 const mongoose = require('mongoose');
 
-mongoose.connect("mongodb+srv://admin:8ydEqT2TPsPghzdt@100x.gbqbkap.mongodb.net/paytm_basic_clone")
+const MONGO_URI = process.env.MONGO_URI
+
+mongoose.connect(MONGO_URI)
 .then(() => console.log("Connected to DB"))
 .catch((e) => console.log("Error connecting to DB", e))
 
