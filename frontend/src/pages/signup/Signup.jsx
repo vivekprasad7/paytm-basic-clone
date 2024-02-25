@@ -51,8 +51,16 @@ const Signup = () => {
                 signupInput.password
             ) {
                 console.log("axios called", signupInput);
-                const res = await axios.post("https://paytm-basic-clone.onrender.com/api/v1/user/signup", signupInput);
-                console.log(res.data);
+
+                try {
+                    const res = await axios.post("https://paytm-basic-clone.onrender.com/api/v1/user/signup", signupInput, {
+                        timeout: 10000 // Timeout set to 10 seconds (in milliseconds)
+                    });
+
+                    console.log(res.data);
+                } catch (error) {
+                    console.error("Error:", error);
+                }
                 // If signup is successful, you might want to redirect to another page or show a success message.
             }
         } catch (error) {
