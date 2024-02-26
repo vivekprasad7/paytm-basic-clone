@@ -29,7 +29,7 @@ const Dashboard = () => {
         </div>
 
         <div className='flex justify-center font-bold'>
-            <h1 className='py-3'>Your Balance: $2000  {filter}</h1>
+            <h1 className='py-3'>Your Balance: $2000 </h1>
 
         </div>
 
