@@ -1,10 +1,12 @@
 import React from 'react'
 import { useState } from 'react'
 import Heading from '../../components/Heading'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from "axios"
 
 const Signin = () => {
+
+  const navigate = useNavigate()
 
     const initialSigninInput = {
         username:"",
@@ -30,6 +32,8 @@ const Signin = () => {
           const res = await axios.post("https://paytm-basic-clone.onrender.com/api/v1/user/signin", signinInput)
           console.log("res-data", res.data)
           localStorage.setItem("token", res.data.token)
+          navigate("/dashboard")
+
 
       }
 
