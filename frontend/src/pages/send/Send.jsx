@@ -18,19 +18,21 @@ const [ amount, setAmount] = useState(0)
         setAmount(value)
     }
 
-    // const submitHandler = () => {
-
-    //     if(
-    //         signupInput.firstName &&
-    //         signupInput.lastName &&
-    //         signupInput.email &&
-    //         signupInput.password 
-    //     ){
-            
-    //     }
-
-
-    // }
+    const submitHandler = async (e) => {
+      try {
+        e.preventDefault()
+        await axios.post("https://paytm-basic-clone.onrender.com/api/v1/account/transfer", {
+          to:id,
+          amount
+        },{
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
+        })
+      } catch(e){
+        console.error("Error while sending data", e)
+      }
+    }
 
   return (
     <div className='flex fl justify-center items-center bg-slate-50 h-screen'>
@@ -52,16 +54,7 @@ const [ amount, setAmount] = useState(0)
             onChange={changeHandler}
             />
            
-            <button className='bg-sky-500 p-2 rounded-lg font-medium text-white' onClick={async() => {
-              await axios.post("https://paytm-basic-clone.onrender.com/api/v1/account/transfer", {
-                to:id,
-                amount
-              },{
-                headers: {
-                  Authorization: "Bearer " + localStorage.getItem("token")
-                }
-              })
-            }}>Transfer Money</button>
+            <button className='bg-sky-500 p-2 rounded-lg font-medium text-white' onClick={submitHandler}>Transfer Money</button>
 
         </form>
     </div>

@@ -2,11 +2,12 @@ import React from 'react'
 import { useState } from 'react'
 import Heading from '../../components/Heading'
 import { Link } from 'react-router-dom'
+import axios from "axios"
 
 const Signin = () => {
 
     const initialSigninInput = {
-        email:"",
+        username:"",
         password:""
     }
 
@@ -18,19 +19,25 @@ const Signin = () => {
         setSigninInput((prev) => ({...prev, [name] :value }))
     }
 
-    // const submitHandler = () => {
+    const submitHandler = async (e) => {
+      e.preventDefault()
+      try {
+        if(
+          signinInput?.username &&
+          signinInput?.password 
+      ){
+          console.log("signin-api", signinInput)
+          const res = await axios.post("https://paytm-basic-clone.onrender.com/api/v1/user/signin", signinInput)
+          console.log("res-data", res.data)
+          localStorage.setItem("token", res.data.token)
 
-    //     if(
-    //         signupInput.firstName &&
-    //         signupInput.lastName &&
-    //         signupInput.email &&
-    //         signupInput.password 
-    //     ){
-            
-    //     }
+      }
 
-
-    // }
+        
+      } catch (error) {
+        console.error("Error while signing in", error)
+      }
+    }
 
   return (
     <div className='flex fl justify-center items-center bg-slate-50 h-screen'>
@@ -38,21 +45,23 @@ const Signin = () => {
         <Heading heading="Signin"/>
              <label  className='font-medium'>Email </label>
             <input 
-            className='py-1 px-2 rounded-lg border border-slate-300'
+            name="username"
+            className='py-1 px-3 rounded-lg border border-slate-300'
             type="text" 
             placeholder='johndoe@gmail.com'
-            value={signinInput.email}
+            value={signinInput.username}
             onChange={changeHandler}
             />
              <label  className='font-medium'>Password: </label>
             <input 
+            name="password"
             className='py-1 px-2 rounded-lg border border-slate-300'
             type="password" 
             placeholder=''
             value={signinInput.password}
             onChange={changeHandler}
             />
-            <button className='bg-sky-500 p-2 rounded-lg font-medium text-white' onClick={() => submitHandler()}>Sign In</button>
+            <button onClick={submitHandler} className='bg-sky-500 p-2 rounded-lg font-medium text-white' >Sign In</button>
             <p className='m-auto'>Don't Have an Account? <Link className='font-medium' to={"/signup"}>Signup</Link></p>
 
         </form>

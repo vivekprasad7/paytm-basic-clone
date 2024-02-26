@@ -6,11 +6,6 @@ import axios from 'axios'
 
 const Signup = () => {
 
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-
     const initialSignupInput = {
         firstName: "",
         lastName: "",
@@ -26,78 +21,25 @@ const Signup = () => {
         setSignupInput((prev) => ({ ...prev, [name]: value }))
     }
 
-    // const submitHandler = async () => {
-
-    //     if(
-    //         signupInput.firstName &&
-    //         signupInput.lastName &&
-    //         signupInput.username &&
-    //         signupInput.password 
-    //     ){
-    //         console.log("axios called", signupInput)
-    //         const res = await axios.post("http://localhost:4000/api/v1/user/signup", signupInput)
-    //         console.log(res.data)
-    //     }
-
-
-    // }
-
-    const submitHandler = async () => {
+    
+    const submitHandler = async (e) => {
+        e.preventDefault()
         try {
-            if (
-                signupInput.firstName &&
-                signupInput.lastName &&
-                signupInput.username &&
-                signupInput.password
-            ) {
-                console.log("axios called", signupInput);
-
-                try {
-                    const res = await axios.post("https://paytm-basic-clone.onrender.com/api/v1/user/signup", signupInput, {
-                        timeout: 10000 // Timeout set to 10 seconds (in milliseconds)
-                    });
-
-                    console.log(res.data);
-                } catch (error) {
-                    console.error("Error:", error);
+            if( signupInput?.firstName &&
+                signupInput?.lastName &&
+                signupInput?.username &&
+                signupInput?.password
+                ) {
+                    console.log("signup-called", signupInput)
+                    const res = await axios.post("https://paytm-basic-clone.onrender.com/api/v1/user/signup", signupInput)
+                    console.log("res-data", res.data)
+                    localStorage.setItem("token", res.data.token)
                 }
-                // If signup is successful, you might want to redirect to another page or show a success message.
-            }
+            
         } catch (error) {
-            console.error("Error in signup:", error.message);
-            setError(error.response.data.message || "Failed to signup");
-        }
-    };
-
-
-    async function handleSignup() {
-        console.log("signup called", firstName, lastName, username, password);
-        try {
-            const response = await fetch("https://paytm-basic-clone.onrender.com/api/v1/user/signup", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    username,
-                    firstName,
-                    lastName,
-                    password
-                })
-            });
-            if (!response.ok) {
-                throw new Error("HTTP error, status = " + response.status);
-            }
-            const data = await response.json();
-            console.log("Response:", data);
-        } catch (error) {
-            console.error("Error:", error);
+            console.error("Error while Signing Up", error)
         }
     }
-
-    // Call handleSignup function on button click
-    // <button >Signup</button>
-
 
 
 
@@ -112,8 +54,8 @@ const Signup = () => {
                     name="firstName"
                     type="text"
                     placeholder='John'
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
+                    value={signupInput?.firstName}
+                    onChange={changeHandler}
                 />
                 <label className='font-medium'>Last Name: </label>
                 <input
@@ -121,8 +63,8 @@ const Signup = () => {
                     className='py-1 px-2 rounded-lg border border-slate-300'
                     type="text"
                     placeholder='Doe'
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
+                    value={signupInput?.lastName}
+                    onChange={changeHandler}
                 />
                 <label className='font-medium'>Username </label>
                 <input
@@ -130,8 +72,8 @@ const Signup = () => {
                     className='py-1 px-2 rounded-lg border border-slate-300'
                     type="text"
                     placeholder='johndoe@gmail.com'
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    value={signupInput?.username}
+                    onChange={changeHandler}
                 />
                 <label className='font-medium'>Password: </label>
                 <input
@@ -139,27 +81,10 @@ const Signup = () => {
                     className='py-1 px-2 rounded-lg border border-slate-300'
                     type="password"
                     placeholder=''
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={signupInput?.password}
+                    onChange={changeHandler}
                 />
-                <button className='bg-sky-500 p-2 rounded-lg font-medium text-white' onClick={async () => {
-                    try {
-                        console.log("signup called", firstName, lastName, username, password);
-                        const res = await axios.post("https://paytm-basic-clone.onrender.com/api/v1/user/signup", {
-                            username,
-                            firstName,
-                            lastName,
-                            password
-                        });
-
-                        console.log("data", res.data);
-
-                        localStorage.setItem("token", res.data.token);
-                    } catch (error) {
-                        console.error("Error:", error);
-                        // Handle error (e.g., display error message to the user)
-                    }
-                }}>Sign Up</button>
+                <button className='bg-sky-500 p-2 rounded-lg font-medium text-white' onClick={submitHandler}>Sign Up</button>
 
 
             </form>
